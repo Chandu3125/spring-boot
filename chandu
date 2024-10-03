@@ -1,4 +1,4 @@
-
+Certainly! Let's create a Spring Boot application that processes customer records from a CSV file using Spring Batch. Below, I will provide you with a complete guide, including the necessary files, classes, and configurations.
 
 ### Step 1: Create a Spring Boot Project
 
@@ -26,11 +26,11 @@
 
 1. **Open IntelliJ IDEA**.
 2. **Import the project**: Go to `File -> Open`, select the extracted folder, and open it as a Maven project.
-3. **Enable Lombok**: Make sure you have the Lombok plugin enabled in IntelliJ (`File -> Settings -> Plugins` and search for Lombok).
+3. **Enable Lombok**: Ensure you have the Lombok plugin enabled in IntelliJ (`File -> Settings -> Plugins` and search for Lombok).
 
 ### Step 3: Update the `pom.xml`
 
-Here’s the `pom.xml` file with the required dependencies:
+Replace the contents of `pom.xml` with the following:
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -108,19 +108,45 @@ logging.level.org.springframework.batch=DEBUG
 
 ### Step 5: Create the CSV File
 
-Create a CSV file named `customers.csv` in the `src/main/resources` directory with 30+ records. Here's a sample format for the first few lines:
+Create a CSV file named `customers.csv` in the `src/main/resources` directory with 30+ records. Here’s a sample:
 
-```
+```csv
 customerId,customerName,lastName,DOB,phone,email
 1,John,Doe,01011990,1234567890,john.doe@example.com
 2,Jane,Smith,02021991,0987654321,jane.smith@example.com
 3,Bob,Johnson,03031992,1122334455,bob.johnson@example.com
-...
+4,Alice,Williams,04041993,2233445566,alice.williams@example.com
+5,Chris,Brown,05051994,3344556677,chris.brown@example.com
+6,Mary,Jones,06061995,4455667788,mary.jones@example.com
+7,James,Davis,07071996,5566778899,james.davis@example.com
+8,Linda,Miller,08081997,6677889900,linda.miller@example.com
+9,Robert,Garcia,09091998,7788990011,robert.garcia@example.com
+10,Patricia,Rodriguez,10101999,8899001122,patricia.rodriguez@example.com
+11,Michael,Wilson,11111990,9900112233,michael.wilson@example.com
+12,Elizabeth,Martinez,12122091,1001223344,elizabeth.martinez@example.com
+13,William,Hernandez,13132092,2102334455,william.hernandez@example.com
+14,Barbara,Lopez,14142093,3203445566,barbara.lopez@example.com
+15,Joseph,Gonzalez,15152094,4304556677,joseph.gonzalez@example.com
+16,Susan,Perez,16162095,5405667788,susan.perez@example.com
+17,Thomas,Wilson,17172096,6506778899,thomas.wilson@example.com
+18,Jessica,Anderson,18182097,7607889900,jessica.anderson@example.com
+19,Charles,Thomas,19192098,8708990011,charles.thomas@example.com
+20,Sarah,Taylor,20202099,9809001122,sarah.taylor@example.com
+21,Matthew,Moore,21212100,1110112233,matthew.moore@example.com
+22,Dorothy,Jackson,22222201,2221223344,dorothy.jackson@example.com
+23,Daniel,Martin,23232302,3332334455,daniel.martin@example.com
+24,Emily,Lee,24242403,4443445566,emily.lee@example.com
+25,Mark,Walker,25252504,5554556677,mark.walker@example.com
+26,Ruth,Hall,26262605,6665667788,ruth.hall@example.com
+27,Paul,Allen,27272706,7776778899,paul.allen@example.com
+28,Laura,York,28282807,8887889900,laura.york@example.com
+29,Kevin,Adams,29292908,9998990011,kevin.adams@example.com
+30,Angela,Baker,30303009,1000011223,angela.baker@example.com
 ```
 
-### Step 6: Create Entity, Repository, and Job Configuration
+### Step 6: Create the Customer Entity
 
-1. **Create an Entity Class**: Create a new class `Customer.java` in the `com.chandu.batchprocessingdemo.entity` package.
+Create a new class `Customer.java` in the `com.chandu.batchprocessingdemo.entity` package.
 
 ```java
 package com.chandu.batchprocessingdemo.entity;
@@ -147,7 +173,9 @@ public class Customer {
 }
 ```
 
-2. **Create a Repository Interface**: Create a new interface `CustomerRepository.java` in the `com.chandu.batchprocessingdemo.repository` package.
+### Step 7: Create the Customer Repository
+
+Create a new interface `CustomerRepository.java` in the `com.chandu.batchprocessingdemo.repository` package.
 
 ```java
 package com.chandu.batchprocessingdemo.repository;
@@ -160,54 +188,51 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 }
 ```
 
-3. **Batch Configuration**: Create a configuration class `BatchConfig.java` in the `com.chandu.batchprocessingdemo.config` package.
+### Step 8: Create the Batch Configuration
+
+Create a new class `BatchConfig.java` in the `com.chandu.batchprocessingdemo.config` package.
 
 ```java
 package com.chandu.batchprocessingdemo.config;
 
 import com.chandu.batchprocessingdemo.entity.Customer;
 import com.chandu.batchprocessingdemo.repository.CustomerRepository;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch
+
+.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.batch.item.file.transform.LineMapper;
 import org.springframework.batch.item.file.transform.FieldSetMapper;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.skip.AlwaysSkipItemSkipPolicy;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @EnableBatchProcessing
 @Component
 public class BatchConfig {
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+    private final CustomerRepository customerRepository;
 
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
-
-    @Autowired
-    private CustomerRepository customerRepository;
+    public BatchConfig(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, CustomerRepository customerRepository) {
+        this.jobBuilderFactory = jobBuilderFactory;
+        this.stepBuilderFactory = stepBuilderFactory;
+        this.customerRepository = customerRepository;
+    }
 
     @Bean
     public Job importUserJob() {
@@ -265,9 +290,7 @@ public class BatchConfig {
     @Bean
     public ItemProcessor<Customer, Customer> processor() {
         return customer -> {
-            if (!customerRepository.exists
-
-ByCustomerId(customer.getCustomerId())) {
+            if (!customerRepository.existsByCustomerId(customer.getCustomerId())) {
                 return customer; // New record to be inserted
             }
             return null; // Skip existing records
@@ -285,7 +308,7 @@ ByCustomerId(customer.getCustomerId())) {
 }
 ```
 
-### Step 7: Create the Application Entry Point
+### Step 9: Create the Application Entry Point
 
 Create a new class `BatchProcessingDemoApplication.java` in the `com.chandu.batchprocessingdemo` package.
 
@@ -303,12 +326,12 @@ public class BatchProcessingDemoApplication {
 }
 ```
 
-### Step 8: Run the Application
+### Step 10: Run the Application
 
 1. **Build the Project**: In IntelliJ, click on the "Maven" tool window, then click on "Reload All Maven Projects".
 2. **Run the Application**: Right-click on `BatchProcessingDemoApplication.java` and select "Run 'BatchProcessingDemoApplication.main()'".
 
-### Step 9: Access H2 Console
+### Step 11: Access H2 Console
 
 After running the application, access the H2 console by navigating to:
 
@@ -321,7 +344,7 @@ Use the following settings to log in:
 - **User Name**: `sa`
 - **Password**: `password`
 
-### Step 10: Verify the Data
+### Step 12: Verify the Data
 
 You can run a simple query to check if the customers were inserted correctly:
 
@@ -331,6 +354,6 @@ SELECT * FROM customer;
 
 ### Conclusion
 
-You now have a Spring Boot application that reads customer records from a CSV file, processes them with Spring Batch, and stores them in an H2 database. If the customer already exists based on the ID, it skips the insertion. You can expand the functionality as needed!
+You have now successfully set up a Spring Boot application that reads customer records from a CSV file, processes them using Spring Batch, and stores them in an H2 database. The application checks if a customer already exists before inserting a new record.
 
 If you have any questions or need further assistance, feel free to ask!
