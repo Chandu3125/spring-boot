@@ -1,4 +1,4 @@
-Sure! I'll guide you step by step through creating a Spring Boot application to process records from a CSV file. We'll use Spring Batch for processing the records, and H2 as an in-memory database. 
+
 
 ### Step 1: Create a Spring Boot Project
 
@@ -9,7 +9,6 @@ Sure! I'll guide you step by step through creating a Spring Boot application to 
    - **Spring Boot**: 2.7.13
    - **Group**: `com.chandu`
    - **Artifact**: `batch-processing-demo`
-   - **Name**: `batch-processing-demo`
    - **Package Name**: `com.chandu.batchprocessingdemo`
    - **Packaging**: Jar
    - **Java**: 1.8
@@ -21,7 +20,7 @@ Sure! I'll guide you step by step through creating a Spring Boot application to 
    - H2 Database
    - Lombok
 
-4. **Generate the Project**: Click on "Generate" to download the zip file. Extract it to your desired location.
+4. **Generate the Project**: Click "Generate" to download the zip file. Extract it to your desired location.
 
 ### Step 2: Set Up Your Project in IntelliJ
 
@@ -92,18 +91,34 @@ Here’s the `pom.xml` file with the required dependencies:
 </project>
 ```
 
-### Step 4: Create the CSV File
+### Step 4: Configure Application Properties
 
-Create a CSV file named `customers.csv` in the `src/main/resources` directory with 30+ records. Example format:
+Create an `application.properties` file in the `src/main/resources` directory with the following content:
+
+```properties
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.batch.initialize-schema=always
+logging.level.org.springframework.batch=DEBUG
+```
+
+### Step 5: Create the CSV File
+
+Create a CSV file named `customers.csv` in the `src/main/resources` directory with 30+ records. Here's a sample format for the first few lines:
 
 ```
 customerId,customerName,lastName,DOB,phone,email
 1,John,Doe,01011990,1234567890,john.doe@example.com
 2,Jane,Smith,02021991,0987654321,jane.smith@example.com
+3,Bob,Johnson,03031992,1122334455,bob.johnson@example.com
 ...
 ```
 
-### Step 5: Create Entity, Repository, and Job Configuration
+### Step 6: Create Entity, Repository, and Job Configuration
 
 1. **Create an Entity Class**: Create a new class `Customer.java` in the `com.chandu.batchprocessingdemo.entity` package.
 
@@ -114,7 +129,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Data
 @Entity
@@ -125,7 +141,7 @@ public class Customer {
     private Long customerId;
     private String customerName;
     private String lastName;
-    private String dob;
+    private String dob; // Format: ddMMyyyy
     private String phone;
     private String email;
 }
@@ -156,59 +172,32 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.step.skip.AlwaysSkipItemSkipPolicy;
-import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.batch.item.file.transform.LineAggregator;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
-import org.springframework.batch.item.file.transform.LineTokenizer;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.support.ListItemReader;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.scope.context.StepContext;
-import org.springframework.batch.core.step.listener.SkipListener;
-import org.springframework.batch.core.step.skip.SkipPolicy;
-import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.item.file.FlatFileItemWriter;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.listener.JobExecutionListenerSupport;
-import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.scope.context.StepContext;
-import org.springframework.batch.core.step.listener.StepListenerSupport;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.FlatFileItemWriter;
-import org.springframework.batch.item.file.transform.LineAggregator;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.batch.item.file.transform.FieldSetMapper;
 import org.springframework.batch.item.file.transform.LineMapper;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.FieldSetMapper;
+import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
+import org.springframework.batch.core.step.skip.AlwaysSkipItemSkipPolicy;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @EnableBatchProcessing
+@Component
 public class BatchConfig {
 
     @Autowired
@@ -253,4 +242,95 @@ public class BatchConfig {
     public LineMapper<Customer> lineMapper() {
         DefaultLineMapper<Customer> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames("customerId", "customerName", "lastName", "dob
+        lineTokenizer.setNames("customerId", "customerName", "lastName", "dob", "phone", "email");
+
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(new FieldSetMapper<Customer>() {
+            @Override
+            public Customer mapFieldSet(FieldSet fieldSet) {
+                return new Customer(
+                        fieldSet.readLong("customerId"),
+                        fieldSet.readString("customerName"),
+                        fieldSet.readString("lastName"),
+                        fieldSet.readString("dob"),
+                        fieldSet.readString("phone"),
+                        fieldSet.readString("email")
+                );
+            }
+        });
+
+        return lineMapper;
+    }
+
+    @Bean
+    public ItemProcessor<Customer, Customer> processor() {
+        return customer -> {
+            if (!customerRepository.exists
+
+ByCustomerId(customer.getCustomerId())) {
+                return customer; // New record to be inserted
+            }
+            return null; // Skip existing records
+        };
+    }
+
+    @Bean
+    public ItemWriter<Customer> writer() {
+        return items -> {
+            for (Customer customer : items) {
+                customerRepository.save(customer);
+            }
+        };
+    }
+}
+```
+
+### Step 7: Create the Application Entry Point
+
+Create a new class `BatchProcessingDemoApplication.java` in the `com.chandu.batchprocessingdemo` package.
+
+```java
+package com.chandu.batchprocessingdemo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BatchProcessingDemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(BatchProcessingDemoApplication.class, args);
+    }
+}
+```
+
+### Step 8: Run the Application
+
+1. **Build the Project**: In IntelliJ, click on the "Maven" tool window, then click on "Reload All Maven Projects".
+2. **Run the Application**: Right-click on `BatchProcessingDemoApplication.java` and select "Run 'BatchProcessingDemoApplication.main()'".
+
+### Step 9: Access H2 Console
+
+After running the application, access the H2 console by navigating to:
+
+```
+http://localhost:8080/h2-console
+```
+
+Use the following settings to log in:
+- **JDBC URL**: `jdbc:h2:mem:testdb`
+- **User Name**: `sa`
+- **Password**: `password`
+
+### Step 10: Verify the Data
+
+You can run a simple query to check if the customers were inserted correctly:
+
+```sql
+SELECT * FROM customer;
+```
+
+### Conclusion
+
+You now have a Spring Boot application that reads customer records from a CSV file, processes them with Spring Batch, and stores them in an H2 database. If the customer already exists based on the ID, it skips the insertion. You can expand the functionality as needed!
+
+If you have any questions or need further assistance, feel free to ask!
