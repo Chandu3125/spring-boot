@@ -1,0 +1,73 @@
+In the Product Overview screen of the Amdocs Customer Interaction Manager (CIM) shown in the image, there are several key buttons and functions that help manage customer products, services, and orders. Here’s an explanation of the buttons and their functions:
+
+1. Modify Product
+
+	•	Purpose: This button is used to modify the existing product details such as features, options, or services that the customer is subscribed to.
+	•	Example: If a customer wants to upgrade their mobile plan (e.g., add more data), you would use this button to apply those changes to the current product.
+
+2. Contract Extension
+
+	•	Purpose: Extends the duration of the current contract, usually when a customer wants to renew their service.
+	•	Example: If a customer is happy with their plan and wants to extend their contract beyond the expiration date, this button is used to renew it.
+
+3. Install Promotion
+
+	•	Purpose: Adds a promotion to the customer’s product. Promotions could be discounts, free features, or temporary upgrades.
+	•	Example: A customer might qualify for a promotion that gives them extra data for a limited period. You would use this button to install the promotional service on their account.
+
+4. Reconnect
+
+	•	Purpose: Re-enables a service that has been temporarily suspended.
+	•	Example: If a customer’s service was disconnected due to non-payment but the issue has been resolved, the agent would use this button to reconnect the service.
+
+5. Recreate
+
+	•	Purpose: Rebuilds or reinstates a service if it was incorrectly set up or deleted.
+	•	Example: If there was an error during the initial setup of a customer’s service, the agent can use this button to recreate the service.
+
+6. Conversion
+
+	•	Purpose: Converts the customer’s current product or service from one type to another (e.g., from postpaid to prepaid).
+	•	Example: If a customer wants to switch from a postpaid plan to a prepaid plan, you would use this button to start the conversion process.
+
+7. Rollover
+
+	•	Purpose: Rolls over unused data or other features to the next billing cycle.
+	•	Example: If a customer has unused data in their postpaid plan and is eligible for a rollover, this button would allow you to apply that rollover.
+
+8. Deinstall
+
+	•	Purpose: Removes a service or product from the customer’s account.
+	•	Example: If a customer no longer needs a specific add-on (such as an international calling package), this button is used to deinstall the service from their account.
+
+9. Suspend
+
+	•	Purpose: Temporarily suspends the service without canceling it entirely.
+	•	Example: If a customer is going on vacation and doesn’t need their phone service temporarily, the agent can suspend the service until they return.
+
+10. Repair
+
+	•	Purpose: Resolves issues with the customer’s product or service that are causing it not to work as intended.
+	•	Example: If a customer’s mobile plan is experiencing technical difficulties, this button would be used to initiate a repair process in the system.
+
+11. Remove Suppress
+
+	•	Purpose: Removes any suppression flags that are preventing the system from making changes to the account.
+	•	Example: If a system flag is preventing a change from happening (such as adding a new service), this button will remove the suppression and allow the update to proceed.
+
+12. SIM Change
+
+	•	Purpose: Updates the system to reflect a change in the customer’s SIM card.
+	•	Example: If a customer has lost their SIM card and is being issued a new one, this button is used to register the new SIM information in the system.
+
+Other Tabs Below Product Overview:
+
+	•	Equipment: Shows any hardware related to the product, such as mobile devices or SIM cards.
+	•	Components: Lists all the individual components of the product, such as data plans, network services, or value-added services.
+	•	Orders: Displays order history related to product changes or updates, as shown in the image. In this case, it shows an order titled “New: Freedom swiss calls light” with a closed status.
+	•	Mobile Prepaid Info: Contains details specific to prepaid accounts.
+	•	Related Products: Shows any associated or bundled products that are linked to the main service.
+	•	Bundle Products: Displays products that come as part of a bundle package.
+	•	Device Reservation: Manages devices reserved for the customer.
+
+These buttons allow agents to manage all aspects of the customer’s services, from installation and promotion to suspension or termination, making it easy to respond to customer requests in real time.
