@@ -95,3 +95,55 @@ Example: If a customer has lost their SIM card and is being issued a new one, th
 
 Double click on the Conversion button Converts the customer’s current product or service from one type to another (e.g., from postpaid to prepaid).
  
+After double click on the conversion button select partner window will open To open any partner sales 1st, we click on the search Now button it will show the partner/Sales now select any partner/Sales ID
+
+ 
+
+
+
+
+After selecting any partner/Sales ID it will open the sales order window
+
+ 
+All the product options are prepaid here we are migrating postpaid mobile to prepaid. for this sales order I can select the sunrise prepaid unlimited
+ 
+Schedule Data: given the today day date here once we select the product options schedule data will automatically updated
+Then Automatically duration and reason both buttons are disable
+ 
+Then click on save and confirm save buttons
+ click ok button ->No ETF (Early Termination Fee) free will be changed
+Then it will open the sales order 
+ 
+For above image we can clear see the Order Type as Conversion it can be any thing post to pre or pre to post but here post to pre 
+            
+Click on the refresh button because all the necessary steps are completed in backend
+
+
+
+Click on the Order Maintenance button 
+ 
+Now click on the process Simulation Test
+ 
+
+
+
+
+After click on the process Simulation Test it will show the status and order Id 
+ 
+If we are stuck in any step, we can check in process Maintenance
+ 
+ 
+Once all steps have been completed Order Status: Closed and Step: Completed
+ 
+LineItem:
+•	Line No: A unique identifier number for each item.
+•	Part No: The product or service code or identifier.
+•	Description: A brief description of the item.
+•	Qty: The quantity of the item ordered.
+•	Status: The current status of the item (e.g., pending, completed, canceled).
+•	Action: Any actions taken or required for the item (e.g., cease, modify).
+•	Comments: Any additional notes or comments related to the item.
+Now open the Product Overview window it will change to postpaid to prepaid
+ 
+
+                                                                                                                                               
